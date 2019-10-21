@@ -18,7 +18,7 @@ public class SQLiteDb {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			
-			c = DriverManager.getConnection("jdbc:sqlite:ChatBotData.sqlite3");
+			c = DriverManager.getConnection("jdbc:sqlite:./resources/ChatBotData.sqlite3");
 			System.out.println("Connection to DB");
 			
 			

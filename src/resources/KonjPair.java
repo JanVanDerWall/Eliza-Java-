@@ -15,7 +15,4 @@ public class KonjPair {
 	public String getSecondWord() {
 		return secondWord;
 	}
-	
-	
-
 }
