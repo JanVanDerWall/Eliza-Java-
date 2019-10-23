@@ -188,25 +188,17 @@ public class ChatBotProgramm {
 		}
 		System.out.println(invalidCounter);
 	}
-	public void run(Scanner s) throws SQLException {
-		
+	public void run() throws SQLException {
+		Scanner s = new Scanner(System.in);
 		System.out.println("Hallo zu unsrem kleinen Psychiater");
-		Thread listen = new Thread(()->{
-			String userInput = "";
-			userInput = s.nextLine();
-			try {
-				handle(synReplacement(userInput.toUpperCase()));
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		});
+		
 		while (!isBye) {
 			String userInput = "";
 			userInput = s.nextLine();
 			handle(synReplacement(userInput.toUpperCase()));
-				
+			
 		}
-		
+		s.close();
 		return;
 	}
 	

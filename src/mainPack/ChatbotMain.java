@@ -12,7 +12,7 @@ import resources.SynWordSet;
 public class ChatbotMain {
 
 	public static void main(String[] args) throws SQLException {
-		Scanner s = new Scanner (System.in);
+		
 		SQLiteDb database = new SQLiteDb();
 		
 		ResultSet reacSet = database.getŔeactions();
@@ -43,8 +43,8 @@ public class ChatbotMain {
 		}
 		
 		ChatBotProgramm programm = new ChatBotProgramm(reactions, konjugations, synonyms);
-		programm.run(s);
-		s.close();
+		programm.run();
+		
 		database.closeConn();
 		
 
