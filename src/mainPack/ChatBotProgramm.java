@@ -27,7 +27,7 @@ public class ChatBotProgramm {
 		this.synonyms = synonyms;
 		keyWordCount = reactions.size();
 		isBye = false;
-		lastInput = "";
+		lastInput = null;
 		invalidCounter = 0;
 	}
 	
@@ -158,24 +158,53 @@ public class ChatBotProgramm {
 	}
 
 	public void handle( String inputString) throws SQLException {
-		
-		if (inputString.equals(lastInput)) {
-			System.out.println(trim(react("!!!WDH!!!")));
-			invalidCounter++;
+		if (invalidCounter < 3) {
+			
+			if (inputString.equals(lastInput)) {
+				System.out.println(trim(react("!!!WDH!!!")));
+				invalidCounter++;
+			} else if (inputString.isEmpty()) {
+				System.out.println(trim(react("!!!LEER!!!")));
+				invalidCounter++;
+			} else {
+				System.out.println(trim(react(inputString)));
+				lastInput = inputString;
+				invalidCounter = 0;
+			}
+			
+		} else if (invalidCounter < 5) {
+			
+			if (inputString.equals(lastInput) || inputString.isEmpty()) {
+				System.out.println(trim(react("!!!ALT!!!")));
+				invalidCounter ++;
+			} else {
+				System.out.println(trim(react(inputString)));
+				lastInput = inputString;
+				invalidCounter = 0;
+			}
+			
 		} else {
-			System.out.println(trim(react(inputString)));
-			lastInput = inputString;
+			System.out.println(trim(react("CIAO")));
 		}
+		System.out.println(invalidCounter);
 	}
-	
 	public void run(Scanner s) throws SQLException {
 		
 		System.out.println("Hallo zu unsrem kleinen Psychiater");
+		Thread listen = new Thread(()->{
+			String userInput = "";
+			userInput = s.nextLine();
+			try {
+				handle(synReplacement(userInput.toUpperCase()));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
 		while (!isBye) {
 			String userInput = "";
 			userInput = s.nextLine();
 			handle(synReplacement(userInput.toUpperCase()));
-			
+				
 		}
 		
 		return;
