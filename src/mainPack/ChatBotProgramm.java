@@ -115,7 +115,7 @@ public class ChatBotProgramm {
 		return trim(result);
 	}
 	
-	private String react(String reactString) {
+	private String react(String reactString, Scanner s) {
 		
 		int keyPosition = 0;
 		int starPosition = 0;
@@ -123,6 +123,7 @@ public class ChatBotProgramm {
 		
 		if (reactString.equals("CIAO")) {
 			isBye = true;
+			s.close();
 			return ("SCHU MAL WIEDR VORBEI");
 		}
 		
@@ -133,7 +134,6 @@ public class ChatBotProgramm {
 				int reactionCount = reactions.get(i).getReactionCount();
 				result = reactions.get(i).getReactions()[reactionCount];
 				reactions.get(i).setReactionCount(reactionCount +1);
-				//System.out.println(reactions.get(i).getReactionCount());
 				
 				if (reactions.get(i).getReactionCount() == reactions.get(i).getReactions().length) {
 					reactions.get(i).setReactionCount(0);
@@ -151,23 +151,23 @@ public class ChatBotProgramm {
 		}
 		
 		if (result.equals("")){
-			return (react("!!!NOMATCH!!!"));
+			return (react("!!!NOMATCH!!!" ,s));
 		} else {
 			return result;
 		}
 	}
 
-	public void handle( String inputString) throws SQLException {
+	public void handle( String inputString, Scanner s) throws SQLException {
 		if (invalidCounter < 3) {
 			
 			if (inputString.equals(lastInput)) {
-				System.out.println(trim(react("!!!WDH!!!")));
+				System.out.println(trim(react("!!!WDH!!!" ,s)));
 				invalidCounter++;
 			} else if (inputString.isEmpty()) {
-				System.out.println(trim(react("!!!LEER!!!")));
+				System.out.println(trim(react("!!!LEER!!!", s)));
 				invalidCounter++;
 			} else {
-				System.out.println(trim(react(inputString)));
+				System.out.println(trim(react(inputString, s)));
 				lastInput = inputString;
 				invalidCounter = 0;
 			}
@@ -175,31 +175,33 @@ public class ChatBotProgramm {
 		} else if (invalidCounter < 5) {
 			
 			if (inputString.equals(lastInput) || inputString.isEmpty()) {
-				System.out.println(trim(react("!!!ALT!!!")));
+				System.out.println(trim(react("!!!ALT!!!" ,s)));
 				invalidCounter ++;
 			} else {
-				System.out.println(trim(react(inputString)));
+				System.out.println(trim(react(inputString ,s)));
 				lastInput = inputString;
 				invalidCounter = 0;
 			}
 			
 		} else {
-			System.out.println(trim(react("CIAO")));
+			System.out.println(trim(react("CIAO" ,s)));
 		}
-		System.out.println(invalidCounter);
+		
 	}
 	public void run() throws SQLException {
-		Scanner s = new Scanner(System.in);
+		Scanner s;
 		System.out.println("Hallo zu unsrem kleinen Psychiater");
-		
+		Thread timeout;
 		while (!isBye) {
+			s = new Scanner(System.in);
 			String userInput = "";
 			userInput = s.nextLine();
-			handle(synReplacement(userInput.toUpperCase()));
+			
+			handle(synReplacement(userInput.toUpperCase()), s);
 			
 		}
-		s.close();
 		return;
 	}
 	
 }
+
